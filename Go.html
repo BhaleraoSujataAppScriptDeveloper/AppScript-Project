@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<!-- jQuery (required by Select2) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+  <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f7f9fc;
+        margin: 0;
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .card {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 100%;
+        max-width: 1200px;
+        box-sizing: border-box;
+      }
+
+      h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 20px;
+        text-align: center;
+      }
+
+      label {
+        display: block;
+        margin-top: 20px;
+        margin-bottom: 8px;
+        color: #555;
+        font-weight: 600;
+      }
+
+      select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        background-color: #f9f9f9;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 25px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      #result {
+        margin-top: 20px;
+        color: #28a745;
+        text-align: center;
+        font-weight: bold;
+      }
+    </style>
+    <base target="_top">
+ <script>
+  function onGenerate() {
+    const poNumber = document.getElementById("goNumber").value;
+    const unit = document.getElementById("unit").value;
+
+    if (!poNumber) {
+      alert("Please select a GO Number.");
+      return;
+    }
+    document.getElementById("result").innerHTML = "Generating PDF...";
+    google.script.run.withSuccessHandler(function(url) {
+      document.getElementById("result").innerHTML =
+        `<a href="${url}" target="_blank">Download PDF</a>`;
+    }).generatePDFForPO(poNumber, unit);
+  }
+
+ // function loadPOs(unit) {
+ //   google.script.run.withSuccessHandler(function(pos) {
+    //  const ddl = document.getElementById("goNumber");
+   //   ddl.innerHTML = '<option value="">-- Select GO --</option>'; // reset options
+  //    pos.forEach(po => {
+    //    const option = document.createElement("option");
+   //     option.text = po;
+    //    ddl.add(option);
+    //  });
+  //  }).getUniquePOs(unit);
+ // }
+
+function loadPOs(unit) {
+  google.script.run.withSuccessHandler(function(pos) {
+    const ddl = document.getElementById("goNumber");
+    ddl.innerHTML = '<option value="">-- Select GO --</option>';
+
+    pos.forEach(po => {
+      const option = document.createElement("option");
+      option.text = po;
+      ddl.add(option);
+    });
+
+    // VERY IMPORTANT — apply Select2 after loading options
+    $("#goNumber").select2({
+      placeholder: "Search GO Number",
+      allowClear: true,
+      width: '100%'
+    });
+
+  }).getUniquePOs(unit);
+}
+
+
+
+function loadPOTable(unit) {
+  console.log("Loading PO Table for:", unit);
+
+  google.script.run
+    .withSuccessHandler(function (poList) {
+      console.log("PO List received:", poList);
+
+      if (!poList || poList.length === 0) {
+        document.getElementById("poTableContainer").innerHTML =
+          "<p>No PO data found for this unit.</p>";
+        return;
+      }
+      let tableHtml = `
+      <style>
+        .styled-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          font-size: 14px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .styled-table th, .styled-table td {
+          padding: 12px 15px;
+          text-align: left;
+        }
+        .styled-table thead th {
+          background-color: #4CAF50;
+          color: white;
+          position: sticky;
+          top: 0;
+          z-index: 1;
+        }
+        .styled-table tbody tr:nth-child(even) {
+          background-color: #f3f3f3;
+        }
+        .styled-table tbody tr:hover {
+          background-color: #e0f7fa;
+        }
+        .styled-table td {
+          border-bottom: 1px solid #ddd;
+        }
+      </style>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>PO Date</th>
+            <th>PO Number</th>
+            <th>Buyer Name</th>
+            <th>GO Number</th>
+          </tr>
+        </thead>
+        <tbody>
+      `;
+
+      poList.forEach(po => {
+        tableHtml += `
+          <tr>
+            <td>${po.poDate}</td>
+            <td>${po.poNumber}</td>
+            <td>${po.buyerName}</td>
+            <td>${po.goNumber}</td>
+          </tr>
+        `;
+      });
+
+      tableHtml += `</tbody></table>`;
+
+      document.getElementById("poTableContainer").innerHTML = tableHtml;
+    })
+    .withFailureHandler(function (error) {
+      console.error("Script error:", error.message);
+      document.getElementById("poTableContainer").innerHTML =
+        "<p style='color:red;'>Script error: " + error.message + "</p>";
+    })
+    .getPODetailsByUnit(unit);
+}
+  window.onload = function() {
+    const unit = document.getElementById("unit").value;
+    console.log("This is onload Unit "+unit);
+    loadPOs(unit);
+    loadPOTable(unit); // load table on form load
+  };
+</script>
+  </head>
+ <body>
+    <div class="card">
+      <h3>Select GO Number (<span id="unit-label"><?= unit ?></span>)</h3>
+      <input type="hidden" id="unit" value="<?= unit ?>">
+     <select id="goNumber" style="width:100%;">
+  <option value="">-- Select GO --</option>
+</select>
+
+      <button onclick="onGenerate()">Generate PDF</button>
+  <div id="poTableContainer" style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc;"></div>
+      <div id="result"></div>
+    </div>
+  </body>
+</html>
