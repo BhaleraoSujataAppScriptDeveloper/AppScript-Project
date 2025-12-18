@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Style all dropdowns inside the packing table */
+#packingTable select {
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+/* Optional: Add hover/focus effects */
+#packingTable select:focus {
+  outline: none;
+  border-color: #4A90E2;
+  box-shadow: 0 0 4px rgba(74,144,226,0.5);
+}
+#packingTable select:hover {
+  border-color: #999;
+}
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 30px;
+      background-color: #f8f9fa;
+    }
+
+    h3 {
+      color: #2c3e50;
+      margin-top: 30px;
+      border-bottom: 2px solid #2c3e50;
+      padding-bottom: 5px;
+    }
+
+.form-section {
+    background: azure;
+    padding: 60px;
+    border-radius: 80px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    max-width: 800px;
+}
+    .form-section label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+      color: #333;
+    }
+    .form-section input,
+    .form-section textarea,
+    .form-section select {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    #packingTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  #packingTable th, #packingTable td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+  #packingTable th {
+    background-color: #f2f2f2;
+  }
+  #packingTable tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  #packingTable input {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  #packingTable .item-input {
+    width: 250px; /* Item column wider */
+  }
+  #packingTable .type-input {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+  .delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+  .delete-btn:hover {
+    background-color: #cc0000;
+  }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+  #packingTable th:nth-child(2),
+  #packingTable td:nth-child(2) {
+    width: 250px;
+  }
+   select.item-select {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 14px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg fill='%23999' height='10' viewBox='0 0 24 24' width='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    cursor: pointer;
+  }
+  select.item-select:focus {
+    outline: none;
+    border-color: #66afe9;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+  }
+   .mobile-row {
+    display: flex;
+    gap: 10px;
+  }
+  .mobile-row input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .po-row {
+    display: flex;
+    gap: 20px;            /* spacing between groups */
+    flex-wrap: wrap;      /* allows wrapping on smaller screens */
+    margin-bottom: 10px;
+  }
+
+  .po-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;     /* Adjust as needed */
+  }
+
+  .po-field label {
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  .po-field input {
+    padding: 4px;
+  }
+  </style>
+</head>
+<body>
+   <input type="hidden" id="unit" value="<?= unit ?>">
+  <div class="container">
+    <div class="form-section">
+<div>
+  <label for="listType">Select</label>
+      <select id="poEntryMode">
+        <option selected>NEW</option>
+         <option >DRAFT</option>
+      </select>
+</div>
+      <div class="po-row">
+    <div>
+      <label for="poNumber">Select PO</label>
+      <select id="poNumber">
+        <option value="">-- Select PO --</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="poDate">PO Date</label>
+      <input type="date" id="poDate" />
+    </div>
+  </div>
+      <label for="buyerName">Buyer Name</label>
+      <input type="text" id="buyerName"  />
+
+      <label for="mateiral">Material</label>
+      <input type="text" id="mateiral"  />
+
+      <label for="consignee">Consignee</label>
+      <input type="text" id="consignee" />
+
+      <label for="consigneeAddress">Consignee Address</label>
+      <textarea id="consigneeAddress" rows="4" required></textarea>
+       <label for="consigneeMobile">Consignee Contact Details</label>
+       <div class="mobile-row">
+      <input type="text" id="consigneeMobile1"/>
+      <input type="text" id="consigneeMobile2"/> 
+       </div>
+<div class="po-row">
+  <div class="po-field">
+    <label for="inv1">Invoice No 1</label>
+    <input type="text" id="inv1" />
+  </div>
+
+  <div class="po-field">
+    <label for="invdate1">Invoice Date 1</label>
+    <input type="date" id="invdate1" />
+  </div>
+
+  <div class="po-field" style="display:none">
+    <label for="inv2">Invoice No 2</label>
+    <input type="text" id="inv2" />
+  </div>
+
+  <div class="po-field" style="display:none">
+    <label for="invdate2">Invoice Date 2</label>
+    <input type="date" id="invdate2" />
+  </div>
+</div>
+    </div>
+    <h3>Packing Details</h3>
+    <table id="packingTable">
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Item</th>
+          <th>Type</th>
+          <th>Drum No.</th>
+          <th>Length</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic rows will be added here -->
+      </tbody>
+    </table>
+    <datalist id="itemSuggestions"></datalist>
+    <button type="button" onclick="addPackingRow()">Add Row</button>
+    <button type="button" id="btnSubmit">Save Draft</button>
+     <button type="button" id="btnPrint">Save/Print</button>
+  </div>
+  <script>
+   
+    let rowCount=0;
+document.getElementById("poEntryMode").addEventListener("change", function () {
+  const mode = this.value;
+  const ddl = document.getElementById("poNumber");
+  ddl.innerHTML = '<option value="">-- Select PO --</option>';
+  if (mode === "NEW") {
+    google.script.run.withSuccessHandler(function (poList) {
+      poList.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.po;
+        option.textContent = item.label;
+        ddl.appendChild(option);
+      });
+    }).getUniquePONumbersWithBuyer();
+  } else if (mode === "DRAFT") {
+    console.log("DRAFT");
+    google.script.run.withSuccessHandler(function (poList) {
+      poList.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.po;
+        option.textContent = item.label;
+        ddl.appendChild(option);
+      });
+    }).getDraftPONumbersWithBuyerUnitI();
+  }
+});
+  window.onload = function () {
+  populatePONumbers();
+ // loadItemTypeMap(); // load type map on startup
+};
+
+function populatePONumbers() {
+  const ddl = document.getElementById("poNumber"); // Reference to the dropdown
+  ddl.innerHTML = '<option value="">-- Select PO --</option>'; // Optional: Clear old options
+  google.script.run.withSuccessHandler(function (poList) {
+    poList.forEach(item => {
+      const option = document.createElement("option");
+      option.value = item.po;
+      option.textContent = item.label;
+      ddl.appendChild(option);
+    });
+  }).getUniquePONumbersWithBuyer();
+}
+let currentItemList = [];
+document.getElementById("poNumber").addEventListener("change", function () {
+  const selectedPO = this.value;
+  const mode = document.getElementById("poEntryMode").value; // 'NEW' or 'DRAFT'
+  if (!selectedPO) return;
+  if (mode === 'NEW') {
+    console.log("Seletected PO "+selectedPO);
+    // Step 1: Load item dropdowns
+    google.script.run.withSuccessHandler(function (items) {
+      currentItemList = items;
+      updateAllItemDropdowns();
+      // Step 2: Then get PO data and fill the form
+      google.script.run.withSuccessHandler(function (poData) {
+        console.log("Selected PO: " + selectedPO);
+        console.log("NEW PO DATA", poData);
+        fillFormWithNewPO(poData); // Make sure this function exists
+      }).getConsigneeDetails(selectedPO);
+    }).getItemsByPONumber(selectedPO);
+  } 
+  else if (mode === 'DRAFT') {
+    // For DRAFT POs - Load full data including packing table
+    google.script.run.withSuccessHandler(function (poData) {
+      console.log("Selected PO: " + selectedPO);
+      console.log("DRAFT PO DATA", poData);
+      fillFormWithDraftData(poData); // Make sure this function exists
+    }).getDraftPOData(selectedPO,"I");
+  }
+});
+function formatDateToInput(dateStr) {
+  // Input format: "14-02-2025"
+  const [day, month, year] = dateStr.split("-");
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
+function formatDateForInput(dateStr) {
+  // If already in yyyy-MM-dd format, return as is
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+
+  // If in dd-MM-yyyy format, convert it
+  if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+    const parts = dateStr.split("-");
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  }
+  return ""; // fallback for invalid formats
+}
+
+
+function fillFormWithNewPO(poData)
+{
+ console.log("Fill form with new data "+poData);
+ document.getElementById("poDate").value =formatDateForInput(poData.poDate) || "";
+ document.getElementById("buyerName").value = poData.buyerName || "";
+ document.getElementById("consignee").value = poData.consigneeName || "";
+ document.getElementById("consigneeAddress").value = poData.consigneeAddress || "";
+ document.getElementById("consigneeMobile1").value = poData.consigneeMobile || "";
+ 
+}
+function fillFormWithDraftData(poData) {
+  const header = poData.header;
+  const items = poData.items;
+console.log("Header:", header);
+console.log("Invoice1:", header["Invoice1"]);
+  // Fill form fields
+  document.getElementById("poDate").value =formatDateForInput(header["Po Date"]) || "";
+  document.getElementById("poNumber").value = header["PO Number"] || "";
+  document.getElementById("buyerName").value = header["Buyer Name"] || "";
+  document.getElementById("mateiral").value = header["Material"] || "";
+  document.getElementById("consignee").value = header["Consignee Name"] || "";
+  document.getElementById("consigneeAddress").value = header["Consignee Address"] || "";
+  document.getElementById("consigneeMobile1").value = header["Mobile 1"] || "";
+  document.getElementById("consigneeMobile2").value = header["Mobile 2"] || "";
+  document.getElementById("inv1").value = header["Inv 1"] || "";
+  document.getElementById("invdate1").value = formatDateForInput(header["invDate1"]) || "";
+  document.getElementById("inv2").value = header["Inv 2"] || "";
+  document.getElementById("invdate2").value = formatDateForInput(header["invDate2"]) || "";
+  // Clear packing table
+  const tableBody = document.getElementById("packingTable").getElementsByTagName('tbody')[0];
+  tableBody.innerHTML = "";
+  rowCount = 0;
+
+  // Add draft items using reusable addPackingRow()
+  items.forEach(item => {
+    addPackingRow(
+      item["Items"] || "",
+      item["Item Type"] || "",
+      item["Drum No"] || "",
+      item["Length"] || ""
+    );
+  });
+}
+
+function updateAllItemDropdowns() {
+  const datalist = document.getElementById("itemSuggestions");
+  datalist.innerHTML = ""; // Clear old options
+  currentItemList.forEach(item => {
+    const opt = document.createElement("option");
+    opt.value = item;
+    datalist.appendChild(opt);
+  });
+  // Update all rows in the table
+  document.querySelectorAll("#packingTable tbody tr").forEach(row => {
+    const cell = row.querySelector(".item-cell");
+    if (!cell) return;
+
+    cell.innerHTML = ""; // Clear old content
+    const itemInput = document.createElement("input");
+    itemInput.type = "text";
+    itemInput.setAttribute("list", "itemSuggestions");
+    itemInput.className = "item-input";
+    cell.appendChild(itemInput);
+  });
+}
+
+document.getElementById("packingTable").addEventListener("input", function (e) {
+  if (e.target && e.target.classList.contains("item-input")) {
+    const selectedItem = e.target.value;
+    const row = e.target.closest("tr");
+    const typeInput = row.querySelector(".type-input");
+    const drumSelect = row.querySelector("select");
+    const poNumber = document.getElementById("poNumber").value;
+    const buyer = document.getElementById("buyerName").value;
+
+    if (selectedItem && poNumber) {
+      google.script.run.withSuccessHandler(function (type) {
+        typeInput.value = type || "";
+
+        if (type) {
+          google.script.run.withSuccessHandler(function (drums) {
+            drumSelect.innerHTML = "";
+
+            // Always add default option first
+            const defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "-- Select Drum --";
+            drumSelect.appendChild(defaultOpt);
+
+            if (drums && drums.length > 0) {
+              drums.forEach(function (d) {
+                const opt = document.createElement("option");
+                opt.value = d;
+                opt.textContent = d;
+                drumSelect.appendChild(opt);
+              });
+            }
+          }).getDrumsByItem(selectedItem, type, buyer);
+        } else {
+          // No type found → reset select
+          drumSelect.innerHTML = `<option value="">-- Select Drum --</option>`;
+        }
+      }).getItemTypeByPOAndItem(poNumber, selectedItem);
+    } else {
+      // If item or PO missing → reset both fields
+      typeInput.value = "";
+      drumSelect.innerHTML = `<option value="">-- Select Drum --</option>`;
+    }
+  }
+});
+
+
+function addPackingRow(item = "", type = "", drum = "", length = "") {
+  const tableBody = document.getElementById("packingTable").getElementsByTagName('tbody')[0];
+  rowCount++;
+  const row = tableBody.insertRow();
+  // Sr. No.
+  const srCell = row.insertCell();
+  srCell.textContent = rowCount;
+
+  // Item
+  const itemCell = row.insertCell();
+  const itemInput = document.createElement("input");
+  itemInput.type = "text";
+  itemInput.setAttribute("list", "itemSuggestions");
+  itemInput.className = "item-input";
+  itemInput.value = item;
+  itemCell.className = "item-cell";
+  itemCell.appendChild(itemInput);
+
+  // Type
+  const typeCell = row.insertCell();
+  const typeInput = document.createElement("input");
+  typeInput.type = "text";
+  typeInput.className = "type-input";
+  typeInput.readOnly = true;
+  typeInput.value = type;
+  typeCell.appendChild(typeInput);
+
+  // Drum
+  const drumCell = row.insertCell();
+  const drumSelect = document.createElement("select");
+  drumSelect.innerHTML = `<option value="">-- Select Drum --</option>`;
+  if (drum) {
+    const opt = document.createElement("option");
+    opt.value = drum;
+    opt.textContent = drum;
+    opt.selected = true;
+    drumSelect.appendChild(opt);
+  }
+  drumCell.appendChild(drumSelect);
+
+  // Length
+  const lengthCell = row.insertCell();
+  const lengthInput = document.createElement("input");
+  lengthInput.type = "number";
+  lengthInput.step = "0.01";
+  lengthInput.value = length;
+  lengthCell.appendChild(lengthInput);
+
+  // Delete button
+  const deleteCell = row.insertCell();
+  deleteCell.innerHTML = '<button type="button" class="delete-btn" onclick="deleteRow(this)">🗑</button>';
+}
+document.getElementById("packingTable").addEventListener("change", function (e) {
+  if (e.target && e.target.tagName === "SELECT") {
+    const row = e.target.closest("tr");
+    const selectedDrum = e.target.value;
+    const lengthInput = row.querySelector('input[type="number"]');
+    if (selectedDrum) {
+      google.script.run.withSuccessHandler(function (qty) {
+        lengthInput.value = qty || "";
+      }).getQtyByDrum(selectedDrum);
+    } else {
+      lengthInput.value = "";
+    }
+  }
+});
+
+function deleteRow(btn) {
+  const row = btn.closest("tr");
+  row.remove();
+  updateSrNo(); // Make sure this also exists
+}
+function updateSrNo() {
+  const rows = document.querySelectorAll("#packingTable tbody tr");
+  let count = 1;
+  rows.forEach(row => {
+    row.cells[0].textContent = count++;
+  });
+  rowCount = rows.length;
+}
+
+
+document.getElementById("btnSubmit").addEventListener("click", function () {
+  const formData = {
+     unit: "I",
+    poNumber: document.getElementById("poNumber").value,
+    buyerName: document.getElementById("buyerName").value,
+    material: document.getElementById("mateiral").value,
+    consignee: document.getElementById("consignee").value,
+    consigneeAddress: document.getElementById("consigneeAddress").value,
+    consigneeMobile1: document.getElementById("consigneeMobile1").value,
+    consigneeMobile2: document.getElementById("consigneeMobile2").value,
+    mode: document.getElementById("poEntryMode").value, // <-- add mode (NEW / DRAFT),
+    packingType:"Preview",
+    poDate: document.getElementById("poDate").value,
+    inv1: document.getElementById("inv1").value,
+    invdate1: document.getElementById("invdate1").value,
+    inv2: document.getElementById("inv2").value,
+    invdate2: document.getElementById("invdate2").value,
+    items: []
+  };
+
+  const rows = document.querySelectorAll("#packingTable tbody tr");
+  rows.forEach(function (row) {
+    const itemName = row.querySelector(".item-input")?.value || "";
+    const type = row.querySelector(".type-input")?.value || "";
+    const drum = row.querySelector("select")?.value || "";
+    const length = row.querySelector('input[type="number"]')?.value || "";
+
+    if (itemName && length) {
+      formData.items.push({ itemName, type, drum, length });
+    }
+  });
+
+  if (formData.items.length === 0) {
+    alert("Please add at least one item before submitting.");
+    return;
+  }
+
+  google.script.run.withSuccessHandler(function (url) {
+  window.open(url, "_blank");
+  alert("Packing sheet has been created and opened.");
+  }).savePackingDetails(formData);
+});
+
+document.getElementById("btnPrint").addEventListener("click", function () {
+  
+  const inv1 = document.getElementById("inv1").value.trim();
+  const invdate1 = document.getElementById("invdate1").value.trim();
+
+  // Check if required fields are empty
+  if (!inv1 || !invdate1) {
+    alert("Please fill in Invoice Number 1 and Invoice Date 1 before proceeding.");
+    return; // Stop execution
+  }
+  const formData = {
+     unit: "I",
+    poNumber: document.getElementById("poNumber").value,
+    buyerName: document.getElementById("buyerName").value,
+    material: document.getElementById("mateiral").value,
+    consignee: document.getElementById("consignee").value,
+    consigneeAddress: document.getElementById("consigneeAddress").value,
+    consigneeMobile1: document.getElementById("consigneeMobile1").value,
+    consigneeMobile2: document.getElementById("consigneeMobile2").value,
+    poDate: document.getElementById("poDate").value,
+    inv1: inv1,
+    inv2: document.getElementById("inv2").value,
+    invdate1: invdate1,
+    invdate2: document.getElementById("invdate2").value,
+    packingType:"Final",
+    items: []
+  };
+  const rows = document.querySelectorAll("#packingTable tbody tr");
+  rows.forEach(function (row) {
+    const itemName = row.querySelector(".item-input")?.value || "";
+    const type = row.querySelector(".type-input")?.value || "";
+    const drum = row.querySelector("select")?.value || "";
+    const length = row.querySelector('input[type="number"]')?.value || "";
+    if (itemName && length) {
+      formData.items.push({ itemName, type, drum, length });
+    }
+  });
+  if (!formData.poNumber || formData.items.length === 0) {
+    alert("Please select PO and enter at least one item.");
+    return;
+  }
+  console.log(`This is generating pdf data ${JSON.stringify(formData)}`);
+  google.script.run.withSuccessHandler(function (url) {
+    window.open(url, '_blank'); // Open the new sheet in a new tab
+  }).savePackingDetails(formData);
+});
+
+
+
+  </script>
+</body>
+</html>
