@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Choices.js CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+  <!-- Choices.js JS -->
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+  <meta charset="UTF-8">
+  <title>Transfer Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #cbbcdf;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .form-group {
+      display: flex;
+      margin-bottom: 15px;
+      gap: 20px;
+    }
+    .form-group label {
+      flex: 0 0 160px;
+      font-weight: bold;
+      align-self: center;
+    }
+    .form-group input, .form-group select {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .btn-submit {
+      background: #2196F3;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      float: right;
+      margin-top: 20px;
+    }
+    .readonly {
+      background: #f1f1f1;
+    }
+    .choices__list--dropdown .choices__item {
+      white-space: nowrap;
+    }
+    .choices {
+      width: 100% !important;
+      max-width: 100%;
+    }
+    .choices__list--dropdown {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Transfer Item Entry Form</h2>
+<div class="form-group">
+    <label for="transferDate">* Transfer Date:</label>
+   <input type="date" id="productionDate"/>
+  </div>
+  <!-- Item Info -->
+  <div class="form-group">
+    <label for="itemName">Item Name:</label>
+    <select id="itemName">
+      <option value="">Select Item</option>
+    </select>
+  </div>
+   <div class="form-group">
+    <label>Item Code:</label>
+    <select id="itemCode"></select>
+  </div>
+  <div class="form-group">
+    <label>Category:</label>
+    <input type="text" id="category" readonly>
+  </div>
+   <div class="form-group">
+    <label for="drum">Drum:</label>
+   <input type="text" id="drum" />
+  </div>
+   <div class="form-group">
+  <label for="fromParty">From Party:</label>
+  <input type="text" id="fromParty" list="partyList" placeholder="Type or select party" />
+</div>
+
+<div class="form-group">
+  <label for="toParty">To Party:</label>
+  <input type="text" id="toParty" list="partyList" placeholder="Type or select party" />
+</div>
+    <div class="form-group">
+    <label for="length">Trasfer Length</label>
+    <input type="text" id="transferLength"/>
+  </div>
+  <div class="form-group">
+    <label>Status</label>
+    <select id="status">
+       <option value="IN" selected>IN</option>
+    </select>
+  </div>
+ 
+  <button type="button" class="btn btn-submit" onclick="submitForm()">Submit</button>
+</div>
+
+<script>
+function loadPendingBuyers() {
+  google.script.run.withSuccessHandler(function(names) {
+    let existing = document.getElementById('partyList');
+    if (existing) existing.remove();
+
+    const datalist = document.createElement('datalist');
+    datalist.id = 'partyList';
+
+    names.forEach(buyer => {
+      const option = document.createElement('option');
+      option.value = buyer;
+      datalist.appendChild(option);
+    });
+
+    document.body.appendChild(datalist);
+  }).getPendingBuyers();
+}
+
+// Run on page load
+window.onload = function () {
+  loadPendingBuyers();
+};
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Populate Item Name dropdown
+  google.script.run.withSuccessHandler(function(names) {
+    const itemNameSelect = document.getElementById("itemName");
+    const choicesItemName = new Choices(itemNameSelect, { searchEnabled: true, itemSelectText: '' ,searchResultLimit: -1});
+
+    choicesItemName.setChoices(
+      names.map(name => ({ value: name, label: name })),
+      'value',
+      'label',
+      true
+    );
+
+    // Add change event AFTER choices is set
+    itemNameSelect.addEventListener("change", updateCategory);
+  }).getUniqueItemNames();
+
+  // Populate Item Code dropdown
+  google.script.run.withSuccessHandler(function(codes) {
+    const itemCodeSelect = document.getElementById("itemCode");
+    const choicesItemCode = new Choices(itemCodeSelect, { searchEnabled: true, itemSelectText: '' ,searchResultLimit: -1});
+
+    choicesItemCode.setChoices(
+      codes.map(code => ({ value: code, label: code })),
+      'value',
+      'label',
+      true
+    );
+
+    itemCodeSelect.addEventListener("change", updateCategory);
+  }).getUniqueItemCodes();
+});
+function updateCategory() {
+  const itemName = document.getElementById("itemName").value;
+  const itemCode = document.getElementById("itemCode").value;
+
+  if (!itemName || !itemCode) {
+    document.getElementById("category").value = "";
+    return;
+  }
+  google.script.run.withSuccessHandler(function(category) {
+    document.getElementById("category").value = category || "";
+    console.log("Category: " + category);
+    console.log("Item Name: " + itemName);
+    console.log("Item Code: " + itemCode);
+  }).getCategoryByItemNameAndCode(itemName, itemCode);
+}
+
+
+function submitForm() {
+  const data = {
+    itemName: document.getElementById("itemName").value,
+    itemCode: document.getElementById("itemCode").value,
+    category: document.getElementById("category").value,
+    drum: document.getElementById("drum").value,
+    fromParty: document.getElementById("fromParty").value,
+    toParty: document.getElementById("toParty").value,
+    transferLength: parseFloat(document.getElementById("transferLength").value) || 0,
+    transferDate: document.getElementById("productionDate").value
+  };
+
+  // Simple validation
+  if (!data.itemName || !data.itemCode || !data.category || !data.drum ||
+      !data.fromParty || !data.toParty || data.transferLength <= 0 || !data.transferDate) {
+    alert("Please fill all mandatory fields.");
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(msg => {
+      alert(msg);
+      google.script.host.close();
+    })
+    .withFailureHandler(err => {
+      alert("Error: " + err.message);
+    })
+    .saveTransferEntry(data);
+}
+
+
+</script>
+</body>
+</html>
