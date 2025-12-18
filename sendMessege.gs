@@ -2,11 +2,11 @@ function doPost(e) {
   const data = JSON.parse(e.postData.contents);
   const { contact, imageLink, waMsg } = data;
 
-  const URL = "https://app.messageautosender.com/message/new/json";
+  const URL = here should be link.
 
   const whatSend = {
-    username: "vishalcables_cc",
-    password: "MIS@1234",
+    username: "-usernamec",
+    password: "password",
     receiverMobileNo: contact,
     message: [waMsg],
     filePathUrl: [imageLink]
