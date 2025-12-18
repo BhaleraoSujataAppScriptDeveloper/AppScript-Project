@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Include Choices.js CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
+<!-- Include Choices.js JS -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+  <meta charset="UTF-8">
+  <title>Stock Entry Form</title>
+  <style>
+.choices__list--dropdown .choices__item {
+  white-space: nowrap;
+}
+
+/* Set dropdown container width */
+.choices {
+  width: 300px !important;
+  max-width: 100%;
+}
+
+/* Limit dropdown list height */
+.choices__list--dropdown {
+  max-height: 500px;
+  overflow-y: auto;
+}
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    .form-group {
+      display: flex;
+      margin-bottom: 15px;
+      gap: 20px;
+    }
+    .form-group label {
+      flex: 0 0 150px;
+      font-weight: bold;
+      align-self: center;
+    }
+    .form-group input, .form-group select {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    table th {
+      background: #f1f1f1;
+    }
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-add {
+      background: #4CAF50;
+      color: white;
+    }
+    .btn-remove {
+      background: #f44336;
+      color: white;
+    }
+    .btn-submit {
+      background: #2196F3;
+      color: white;
+      margin-top: 20px;
+      float: right;
+    }
+    .total-box {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+      table {
+    width: 100%;
+    border-collapse: separate; /* better for rounded corners */
+    border-spacing: 0 8px; /* space between rows */
+    margin-top: 15px;
+    font-size: 14px;
+  }
+  table thead tr {
+    background-color: #4CAF50;
+    color: #bb2222;
+    border-radius: 8px;
+  }
+  table thead th {
+    padding: 12px 10px;
+    text-align: center;
+    font-weight: 600;
+    border: none;
+  }
+  table tbody tr {
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  table tbody tr:hover {
+    background-color: #f0f9f5;
+  }
+  table tbody td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  table tbody td input {
+    width: 90%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  table tbody td input:focus {
+    border-color: #4CAF50;
+    outline: none;
+  }
+  .btn-remove {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+  #drumTable select {
+  width: 100%;  /* Full width of cell */
+  max-width: 200px; /* Optional max width */
+}
+select {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  min-width: 150px;  /* Adjust width as needed */
+  box-sizing: border-box;
+}
+
+select:focus {
+  border-color: #66afe9;
+  outline: none;
+  box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+}
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Stock Entry Form</h2>
+
+  <!-- Item Info -->
+  <div class="form-group">
+    <label for="itemName">Item Name:</label>
+    <select id="itemName">
+      <option value="">Select Item</option>
+    </select>
+  </div>
+   <div class="form-group">
+    <label>Item Code:</label>
+    <select id="itemCode"></select>
+  </div>
+  <div class="form-group">
+    <label>Category:</label>
+    <input type="text" id="category" readonly>
+  </div>
+ 
+  <!-- Drum Table -->
+  <table id="drumTable">
+    <thead>
+  <tr>
+    <th>Drum No.</th>
+    <th>Production Length</th>
+    <th>Party Name</th>
+    <th>Party Assign Length</th>
+    <th>Department</th>
+    <th>Code</th>
+    <th>Action</th>
+  </tr>
+</thead>
+    <tbody></tbody>
+  </table>
+
+  <button type="button" class="btn btn-add" onclick="addRow()">+ Add Drum</button>
+
+  <div class="total-box">Total Production Length: <span id="totalLength">0</span></div>
+
+  <button type="button" class="btn btn-submit" onclick="submitForm()">Submit</button>
+</div>
+
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+  // Populate Item Name dropdown
+  google.script.run.withSuccessHandler(function(names) {
+    const itemNameSelect = document.getElementById("itemName");
+    const choicesItemName = new Choices(itemNameSelect, { searchEnabled: true, itemSelectText: '' ,searchResultLimit: -1});
+
+    choicesItemName.setChoices(
+      names.map(name => ({ value: name, label: name })),
+      'value',
+      'label',
+      true
+    );
+
+    // Add change event AFTER choices is set
+    itemNameSelect.addEventListener("change", updateCategory);
+  }).getUniqueItemNames();
+
+  // Populate Item Code dropdown
+  google.script.run.withSuccessHandler(function(codes) {
+    const itemCodeSelect = document.getElementById("itemCode");
+    const choicesItemCode = new Choices(itemCodeSelect, { searchEnabled: true, itemSelectText: '' ,searchResultLimit: -1});
+
+    choicesItemCode.setChoices(
+      codes.map(code => ({ value: code, label: code })),
+      'value',
+      'label',
+      true
+    );
+    itemCodeSelect.addEventListener("change", updateCategory);
+  }).getUniqueItemCodes();
+});
+
+function updateCategory() {
+  const itemName = document.getElementById("itemName").value;
+  const itemCode = document.getElementById("itemCode").value;
+
+  if (!itemName || !itemCode) {
+    document.getElementById("category").value = "";
+    return;
+  }
+  google.script.run.withSuccessHandler(function(category) {
+    document.getElementById("category").value = category || "";
+    console.log("Category: " + category);
+    console.log("Item Name: " + itemName);
+    console.log("Item Code: " + itemCode);
+  }).getCategoryByItemNameAndCode(itemName, itemCode);
+}
+function createPartyNameDropdown() {
+  const input = document.createElement('input');
+  input.setAttribute('list', 'partyList');
+  input.setAttribute('placeholder', 'Select or type party');
+  input.classList.add('party-input'); // optional styling hook
+  return input.outerHTML;
+}
+
+function loadPendingBuyers() {
+  google.script.run.withSuccessHandler(function(names) {
+    pendingBuyers = names;
+
+    // If datalist already exists, remove it to avoid duplicates
+    let existing = document.getElementById('partyList');
+    if (existing) existing.remove();
+
+    // Create datalist dynamically
+    const datalist = document.createElement('datalist');
+    datalist.id = 'partyList';
+
+    pendingBuyers.forEach(buyer => {
+      const option = document.createElement('option');
+      option.value = buyer;
+      datalist.appendChild(option);
+    });
+
+    document.body.appendChild(datalist);
+  }).getPendingBuyers();
+}
+
+// Call on page load
+window.onload = loadPendingBuyers;
+
+function addRow() {
+  const tableBody = document.getElementById("drumTable").querySelector("tbody");
+  const row = document.createElement("tr");
+
+  row.innerHTML = `
+    <td><input type="text" placeholder="Drum No"></td>
+    <td><input type="number" step="0.01" placeholder="Production Length" oninput="updateTotal()"></td>
+    <td>${createPartyNameDropdown()}</td>
+    <td><input type="number" step="0.01" placeholder="Party Assign Length"></td>
+    <td>
+      <select>
+        <option value="">Select dept</option>
+        <option value="DCL">MSEDCL</option>
+        <option value="TCL">MSETCL</option>
+      </select>
+    </td>
+     <td><input type="text" placeholder="Code"></td>
+    <td><button type="button" class="btn btn-remove" onclick="removeRow(this)">Remove</button></td>
+  `;
+  tableBody.appendChild(row);
+}
+function removeRow(button) {
+  const row = button.closest("tr");
+  row.remove();
+  updateTotal();
+}
+function updateTotal() {
+  let total = 0;
+  document.querySelectorAll('#drumTable tbody tr').forEach(row => {
+    const val = parseFloat(row.cells[1].querySelector("input").value) || 0;
+    total += val;
+  });
+  document.getElementById("totalLength").textContent = total.toFixed(2);
+}
+function submitForm() {
+  let data = {
+    itemName: document.getElementById("itemName").value,
+    itemCode: document.getElementById("itemCode").value,
+    category: document.getElementById("category").value,
+    drums: []
+  };
+
+document.querySelectorAll('#drumTable tbody tr').forEach(row => {
+  let drumNo = row.cells[0].querySelector("input").value;
+  let prodLength = row.cells[1].querySelector("input").value;
+
+  let partyNameRaw = row.cells[2].querySelector("input")?.value || "";
+  let partyLengthRaw = row.cells[3].querySelector("input").value;
+
+  let dept = row.cells[4].querySelector("select")?.value || "";
+  let code = row.cells[5].querySelector("input")?.value || "";
+
+  let partyName = partyNameRaw.trim() === "" || partyNameRaw === "Select Party" ? "Godown" : partyNameRaw;
+  let partyLength = partyLengthRaw.trim() === "" ? "0" : partyLengthRaw;
+
+  data.drums.push({
+    drumNo: drumNo,
+    prodLength: prodLength,
+    partyLength: partyLength,
+    partyName: partyName,
+    dept: dept,
+    code: code
+  });
+});
+
+ google.script.run
+    .withSuccessHandler(() => {
+      alert("Stock entry saved!");
+      google.script.host.close(); // ✅ This will close the dialog/sidebar
+    })
+    .withFailureHandler(error => alert(error.message))
+    .saveStockEntry(data);
+}
+// Initialize
+fetchItemMaster();
+</script>
+
+</body>
+</html>
