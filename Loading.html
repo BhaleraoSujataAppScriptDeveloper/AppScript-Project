@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        font-family: Arial, sans-serif;
+      }
+      .loader {
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #4285F4;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .text {
+        margin-left: 15px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader"></div>
+    <div class="text">Generating Report...</div>
+
+    <script>
+      // Call server-side function
+      google.script.run.withSuccessHandler(() => {
+        google.script.host.close(); // Automatically close dialog when done
+      }).generatePendingOrdersReport();
+    </script>
+  </body>
+</html>
