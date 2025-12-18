@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    .suggestion-box {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.suggestion-box div {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.suggestion-box div:hover {
+  background: #e6f3ff;
+}
+ /* Style the input box */
+  #party {
+    width: 250px;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline:none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  /* Focus effect */
+  #party:focus {
+    border-color: #4A90E2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.4);
+  }
+
+  /* Label style */
+  label[for="party"] {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: #333;
+  }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #eef2f7;
+      padding: 30px;
+    }
+
+    .panel {
+      background-color: #9ddce117;
+      border-radius: 50px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .form-panel {
+      flex: 1;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.05);
+    }
+
+    .form-panel label {
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .form-panel input, .form-panel select, .form-panel textarea {
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 15px;
+      background-color: #fdfdfd;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+.remove-header-btn {
+      float: right;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .remove-header-btn:hover {
+      background-color: #d32f2f;
+    }
+    button {
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px 5px 15px 0;
+    }
+
+    button:hover {
+      background-color: #135ba1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 8px; /* reduced row height */
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #f1f1f1;
+    }
+
+    .header-row {
+      background-color: #e0f7fa;
+      font-weight: bold;
+      position: relative;
+    }
+    select, input[type="number"], input[type="text"] {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #bbb;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .terms-box {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fdfdfd;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .terms-box h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .terms-box h3 i {
+      cursor: pointer;
+    }
+    .terms-editable {
+      border: 1px solid #ccc;
+      padding: 12px;
+      border-radius: 6px;
+      background-color: #fff;
+      font-size: 15px;
+      min-height: 100px;
+    }
+    .terms-editable {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 100px;
+  }
+  .suggestion-box {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.suggestion-box div {
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.suggestion-box div:hover {
+  background: #e6f3ff;
+}
+.terms-editable[contenteditable="true"] {
+  border: 1px solid #999;
+  padding: 10px;
+  background-color: #fefefe;
+}
+/* Table styling */
+#quotationTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+#quotationTable th, #quotationTable td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+}
+
+/* Header Row */
+.header-row td {
+  background: #e8f6ff;
+  font-weight: bold;
+  padding: 8px;
+  position: relative;
+}
+
+/* Inputs & Selects */
+#quotationTable input[type="text"],
+#quotationTable input[type="number"],
+#quotationTable select {
+  width: 95%;
+  padding: 4px 6px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+/* Delete icon instead of button */
+.delete-icon {
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 18px;
+}
+.delete-icon:hover {
+  color: #a71d2a;
+}
+.autocomplete-container {
+  position: relative;
+  width: 300px;
+}
+
+#editQuotationSelect {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.suggestions-box {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 0 0 6px 6px;
+  z-index: 1000;
+  display: none;
+}
+
+.suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #f0f0f0;
+}
+.quotation-header {
+  background: #f8f9fa;
+  border: 2px solid #4a90e2;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 15px 0;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.form-title {
+  text-align: center;
+  padding: 16px;
+  background: linear-gradient(347deg, #4ae280, #548ec7);
+  color: white;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.form-title h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Quotation header (below title) */
+.quotation-header {
+  background: #f8f9fa;
+  border: 2px solid #4a90e2;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 10px 0 20px 0;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+.quotation-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+  font-weight: 600;
+}
+
+.quotation-id {
+  color: #4a90e2;
+  font-weight: bold;
+}
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <div class="panel">
+     <div class="form-title">
+  <h2>Quotation Entry Form</h2>
+</div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+  <label for="quotationEntry">Quotation Entry:</label>
+  <select id="quotationEntry">
+    <option value="NEW" selected>NEW</option>
+    <option value="EDIT">EDIT</option>
+    <option value="REVISED">REVISED</option>
+  </select>
+  <input list="partyList" id="party" name="party" placeholder="Type to search Party...">
+<datalist id="partyList"></datalist>
+</div>
+  <br>
+    <div id="editQuotationPanel" class="panel" style="display: none;">
+  <h2>Edit Draft Quotation</h2>
+  <label>Select Quotation No:
+    <div class="autocomplete-container">
+    <input list="quotationList" id="editQuotationSelect" name="party" placeholder="Type to search Quotation...">
+<datalist id="quotationList"></datalist>
+    </div>
+  </label>
+</div>
+    <div id="newQuotationPanel" class="panel" style="display: block;">
+   
+<input type="hidden" id="hiddeninqNo" value="<?= inqNo ?>">
+    <div class="form-row">
+      <div class="form-panel">
+    <label>Quotation Date:
+          <input type="date" id="quotationDate">
+        </label>
+
+        <label>Quotation Type:
+          <select id="quotationType">
+            <option value="Purchase">Purchase Inquiry</option>
+            <option value="Tender">Tender Inquiry</option>
+          </select>
+        </label>
+
+       <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 10px;">
+  <label>
+    Draft No:
+    <input type="text" id="quotationNo" readonly>
+  </label>
+  <label>
+    Quotation No:
+    <input type="text" id="finalQuotationNumber">
+  </label>
+</div>
+        <label>Cable Type:
+          <select id="cableType">
+            <option value="LT">LT</option>
+            <option value="HT">HT</option>
+          </select>
+        </label>
+         <label>Company Name:
+          <input type="text" id="companyName">
+        </label>
+          <label>Project
+          <input type="text" id="project">
+        </label>
+      </div>
+      <div class="form-panel">
+        <label>Address:
+          <textarea  id="address" required rows="4"></textarea>
+        </label>
+<div style="display: flex; gap: 20px; margin-bottom: 20px;">
+  <label style="flex: 1; position: relative;">
+    State:
+    <input type="text" id="stateInput" placeholder="Type state name..." autocomplete="off" />
+    <div id="stateSuggestions" class="suggestion-box"></div>
+  </label>
+
+  <label style="flex: 1; position: relative;">
+    City:
+    <input type="text" id="cityInput" placeholder="Type city name..." autocomplete="off" />
+    <div id="citySuggestions" class="suggestion-box"></div>
+  </label>
+</div>
+        <label>Contact:
+          <input type="text" id="contact" pattern="[0-9]+">
+        </label>
+        <label>Email:
+          <input type="email" id="email">
+        </label>
+        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+        <label style="flex: 1; position: relative;">
+    Kind Attn Name:
+    <input type="text" id="kname"/>
+  </label>
+
+  <label style="flex: 1; position: relative;">
+    Kind attn Mobile
+    <input type="text" id="kmobile"/>
+  </label>
+        </div>
+      </div>
+    </div>
+    <input type="text" id="quotTitle">
+    <!-- Header Dropdown -->
+    <label>Select Header:
+      <select id="headerDropdown">
+        <option value="">--Select Header--</option>
+      </select>
+    </label>
+    
+    <button id="btnAddHeader">Add Header</button>
+   <table id="quotationTable">
+      <thead>
+        <tr>
+          <th>Sr No.</th>
+          <th>Item</th>
+          <th>Type</th>
+          <th>UOM</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Basic Value</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+    <tr>
+      <td colspan="4" style="text-align: right;"><strong>Total:</strong></td>
+      <td id="totalQty">0</td>
+      <td id="totalUnitPrice">0</td>
+      <td id="totalBasicValue">0.00</td>
+      <td></td>
+    </tr>
+  </tfoot>
+    </table>
+       <div class="terms-box">
+    <h3>Terms and Conditions <i class="fas fa-edit" id="editTermsBtn" style="color:gray;"></i></h3>
+    <div id="termsEditableInquiry" class="terms-editable" contenteditable="false" style="display: block;">
+      1. Prices are Ex-Works.<br>
+      2. GST Extra @18% (HSN Code 85446090)	<br>
+      3. Prices are FIRM and offer valid for 3 Days<br>
+      4. Payment Terms : 20% Advance Balance against Proforma Invoice before Dispatch.	 <br>
+      5. Delivery :  As per your requirement / Mutual Consent<br>
+      6. Any change in  G.S.T. or enactment of new levies by Govt. shall be to your account.<br>
+      7. Quantity Variation will be + 5% (FIVE) Percent.
+    </div>
+      <div id="termsEditableTender" class="terms-editable" contenteditable="false" style="display: none;">
+      1. Prices are FOR. min10m.ton Truckload(part load will be Extra at Actual). <br>
+      2. GST Extra @18% (HSN Code 85446090)<br>
+      3. Prices are Variable as per IEEMA base price of Aug-2025.<br>
+      4. Being an MSME Unit,Our Payment Terms will be 20% Advance Balance 45 Days LC or BG.<br>
+      5. Delivery :  As per your requirement / Mutual Consent	.<br>
+      6. Any change in  G.S.T. or enactment of new levies by Govt. shall be to your account.<br>
+      7. Quantity Variation will be + 5% (FIVE) Percent.<br>
+      8. The Cables Offered by us are guaranteed for trouble free performance for a period of 18 months from the date of commissioning or 24 months from the date of supply, whichever is earlier.<br>	
+      9. We will not provide any kind of Bank Guarantee.
+      </div>
+  </div>
+          <select id="salesExecutive">
+          </select>
+        </label>
+  <button id="btnDraft">Draft</button>
+  <button id="btnFinal">Final</button>
+<button type="button" onclick="deleteQuotation()" id="btnDeleteQuot" style="display:none">🗑 Delete Quotation</button>
+<div id="loading" style="display:none; margin-top:10px;">
+  <div class="spinner"></div>
+  <p>Generating quotation PDF...</p>
+</div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    document.getElementById("quotTitle").value="Your Purchase Tender Enquiry of LT Power & Control Cables for Project";
+    // ---------- state ----------
+    let isEditMode = false;
+    let selectedState = "";
+    let headerMeta = []; // { headerId, label }
+    let headerDescriptions = [];
+
+    // ---------- cached DOM ----------
+    const quotationEntry = document.getElementById("quotationEntry");
+    const editQuotationPanel = document.getElementById("editQuotationPanel");
+    const newQuotationPanel = document.getElementById("newQuotationPanel");
+    const partyInput = document.getElementById("party");
+    const editQuotationSelect = document.getElementById("editQuotationSelect");
+    const headerDropdown = document.getElementById("headerDropdown");
+    const quotationTableBody = document.querySelector("#quotationTable tbody");
+    const totalQtyEl = document.getElementById("totalQty");
+    const totalUnitPriceEl = document.getElementById("totalUnitPrice");
+    const totalBasicValueEl = document.getElementById("totalBasicValue");
+    const quotationTypeEl = document.getElementById("quotationType");
+    const editTermsBtn = document.getElementById("editTermsBtn");
+    const inquiryTerms = document.getElementById("termsEditableInquiry");
+    const tenderTerms = document.getElementById("termsEditableTender");
+    const stateInput = document.getElementById("stateInput");
+    const stateSuggestions = document.getElementById("stateSuggestions");
+    const cityInput = document.getElementById("cityInput");
+    const citySuggestions = document.getElementById("citySuggestions");
+    const salesExecutive = document.getElementById("salesExecutive");
+    const btnAddHeader = document.getElementById("btnAddHeader");
+    const btnDraft = document.getElementById("btnDraft");
+    const btnFinal = document.getElementById("btnFinal");
+    const btnDeleteQuot = document.getElementById("btnDeleteQuot");
+    const quotationNoInput = document.getElementById("quotationNo");
+    const hiddeninqNo = document.getElementById("hiddeninqNo");
+    const loadingEl = document.getElementById("loading");
+
+    // ---------- init ----------
+    function init(){
+      // default date
+      const dateInput = document.getElementById("quotationDate");
+      dateInput.value = new Date().toISOString().split("T")[0];
+
+      // wire events
+      quotationEntry.addEventListener("change", onModeChange);
+      editQuotationSelect.addEventListener("change", onEditSelection);
+      btnAddHeader.addEventListener("click", onAddHeaderClick);
+      btnDraft.addEventListener("click", (e)=> submitForm("Draft", e));
+      btnFinal.addEventListener("click", (e)=> submitForm("Final", e));
+      btnDeleteQuot.addEventListener("click", deleteQuotation);
+      quotationTypeEl.addEventListener("change", onQuotationTypeChange);
+      editTermsBtn.addEventListener("click", toggleTermsEditable);
+      partyInput.addEventListener("change",onPartyChange)
+      // suggestions
+      setupStateSuggestions();
+      setupCitySuggestions();
+
+      // load master lists
+      populateMasterDropdown();
+      loadPartySuggestions();
+      loadHeaderDescriptions();
+
+      // autogen quotation number
+      setAutoQuotationNumber();
+      updateTermsVisibility();
+    }
+//-----PArty data------
+function onPartyChange() {
+      const partyName = document.getElementById("party").value;
+      if (!partyName) return;
+      google.script.run.withSuccessHandler(fillPartyDetails).getPartyDetails(partyName);
+    }
+
+    function fillPartyDetails(data) {
+    
+      if (!data) return;
+      document.getElementById("address").value        = data.address        || "";
+      document.getElementById("companyName").value        = data.companyName        || "";
+      document.getElementById("stateInput").value          = data.state          || "";
+      document.getElementById("cityInput").value           = data.city           || "";
+      document.getElementById("contact").value        = data.contact        || "";
+      document.getElementById("email").value          = data.email          || "";
+      document.getElementById("project").value        = data.project        || "";
+      document.getElementById("salesExecutive").value = data.salesExecutive || "";
+      document.getElementById("kname").value          = data.kname          || "";
+      document.getElementById("kmobile").value        = data.kmobile        || "";
+      document.getElementById("quotationType").value  = data.quotationType  || "";
+      document.getElementById("cableType").value      = data.cableType      || "";
+    }
+
+//---Party date
+    // ---------- mode handlers ----------
+    function onModeChange(){
+      const mode = quotationEntry.value;
+      if (mode === "NEW"){
+        isEditMode = false;
+        clearForm();
+        newQuotationPanel.style.display = "block";
+        editQuotationPanel.style.display = "none";
+        partyInput.style.display = "inline-block";
+        btnDeleteQuot.style.display = "none";
+        btnDraft.style.display = "inline-block";
+        btnFinal.style.display = "inline-block";
+        quotationNoInput.readOnly = true;
+        setAutoQuotationNumber();
+        inquiryTerms.style.display = "block";
+        tenderTerms.style.display = "none";
+      } else if (mode === "EDIT"){
+        isEditMode = true;
+        newQuotationPanel.style.display = "none";
+        editQuotationPanel.style.display = "block";
+        partyInput.style.display = "none";
+        btnDeleteQuot.style.display = "inline-block";
+        btnDraft.style.display = "inline-block";
+        btnFinal.style.display = "inline-block";
+        quotationNoInput.readOnly = true;
+        // load draft numbers
+        google.script.run.withSuccessHandler(populateQuotationList).getDraftQuotationNumbers();
+      } else if (mode === "REVISED"){
+        isEditMode = false;
+        clearForm();
+        newQuotationPanel.style.display = "none";
+        editQuotationPanel.style.display = "block";
+        partyInput.style.display = "none";
+        btnDraft.style.display = "inline-block";
+        btnFinal.style.display = "inline-block";
+        btnDeleteQuot.style.display = "none";
+        quotationNoInput.readOnly = false; // user can provide new number
+        google.script.run.withSuccessHandler(populateQuotationList).getFinalQuotations();
+      }
+    }
+
+    function populateQuotationList(list){
+      const datalist = document.getElementById("quotationList");
+      datalist.innerHTML = "";
+      if(!Array.isArray(list)) return;
+      list.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.label || item; // keep old format fallback
+        datalist.appendChild(option);
+      });
+    }
+
+    function onEditSelection(){
+      const val = editQuotationSelect.value;
+      const searchtype=document.getElementById("quotationEntry").value;
+      if (!val) return;
+      const selectedQuotationNo = val.split(" - ")[0].trim();
+      if (!selectedQuotationNo) return;
+      google.script.run.withSuccessHandler(function(quotationData){
+        if (!quotationData){ alert("No data found for selected quotation."); return; }
+        fillFormWithLoadedData(quotationData);
+        newQuotationPanel.style.display = "block";
+        editQuotationPanel.style.display = "none";
+        partyInput.style.display = "none";
+      }).loadQuotationByNumber(selectedQuotationNo,searchtype);
+    }
+
+    // ---------- headers & items ----------
+    function onAddHeaderClick(){
+      const selected = headerDropdown.value;
+      if (!selected) { alert("Please select a header first."); return; }
+      addHeader(selected);
+      headerDropdown.value = "";
+    }
+
+    function addHeader(label){
+      const headerId = "header_" + Date.now();
+      headerMeta.push({ headerId: headerId, label: label });
+
+      const tr = document.createElement("tr");
+      tr.className = "header-row";
+      tr.dataset.headerId = headerId;
+      tr.innerHTML = `
+        <td colspan="8">
+          <span style="font-size:14px;">${label}</span>
+          <div style="position:absolute; right:8px; top:6px;">
+            <span class="add-item" data-header="${headerId}" title="Add Item" style="cursor:pointer; font-size:18px; color:#007bff; margin-right:6px;">➕</span>
+            <span class="remove-header" title="Remove Header" style="cursor:pointer; font-size:18px; color:#dc3545;">✖</span>
+          </div>
+        </td>
+      `;
+      quotationTableBody.appendChild(tr);
+
+      // delegates for add/remove
+      tr.querySelector(".add-item").addEventListener("click", ()=> addItem(headerId));
+      tr.querySelector(".remove-header").addEventListener("click", (ev)=> removeHeader(ev.target));
+    }
+
+    function removeHeader(button){
+      const row = button.closest("tr");
+      if (!row) return;
+      const headerId = row.dataset.headerId;
+      // remove following rows until next header-row
+      let next = row.nextElementSibling;
+      while (next && !next.classList.contains("header-row")){
+        const rem = next;
+        next = next.nextElementSibling;
+        rem.remove();
+      }
+      // remove header row
+      row.remove();
+      // remove meta
+      headerMeta = headerMeta.filter(h => h.headerId !== headerId);
+      updateTotals();
+    }
+
+    function renumberItems(headerId){
+      const rows = Array.from(quotationTableBody.querySelectorAll(`tr[data-header-id='${headerId}']`)).filter(r => !r.classList.contains("header-row"));
+      rows.forEach((r,i)=> { const cell0 = r.cells[0]; if (cell0) cell0.textContent = i+1; });
+    }
+
+    function addItem(headerId){
+      const header = quotationTableBody.querySelector(`tr[data-header-id='${headerId}']`);
+      if (!header) return;
+      // find insert position (after last item of this header)
+      let insertAfter = header;
+      let nxt = header.nextElementSibling;
+      while (nxt && !nxt.classList.contains("header-row")){
+        insertAfter = nxt;
+        nxt = nxt.nextElementSibling;
+      }
+      const row = document.createElement("tr");
+      row.dataset.headerId = headerId;
+
+      // create cells
+      row.innerHTML = `<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>`;
+      // insert
+      if (insertAfter && insertAfter.nextElementSibling) quotationTableBody.insertBefore(row, insertAfter.nextElementSibling);
+      else quotationTableBody.appendChild(row);
+
+      // fill cells
+      const snCell = row.cells[0];
+      const descCell = row.cells[1];
+      const typeCell = row.cells[2];
+      const uomCell = row.cells[3];
+      const qtyCell = row.cells[4];
+      const priceCell = row.cells[5];
+      const basicCell = row.cells[6];
+      const actionCell = row.cells[7];
+
+      // serial
+      const existingCount = quotationTableBody.querySelectorAll(`tr[data-header-id='${headerId}']:not(.header-row)`).length;
+      snCell.textContent = existingCount + 1;
+
+      // item select
+      // create input instead of select
+const itemInput = document.createElement("input");
+itemInput.type = "text";
+itemInput.placeholder = "Type item name...";
+itemInput.classList.add("item-autocomplete"); // optional for styling
+descCell.appendChild(itemInput);
+
+// suggestion box
+const suggestionBox = document.createElement("div");
+suggestionBox.classList.add("suggestion-box");
+descCell.appendChild(suggestionBox);
+
+// fetch items from server
+google.script.run.withSuccessHandler(function(items) {
+  itemInput.addEventListener("input", function() {
+    const query = itemInput.value.toLowerCase();
+    suggestionBox.innerHTML = "";
+    if (query.length === 0) {
+      suggestionBox.style.display = "none";
+      return;
+    }
+    const filtered = items.filter(i => i.toLowerCase().includes(query));
+    filtered.forEach(i => {
+      const div = document.createElement("div");
+      div.textContent = i;
+      div.classList.add("suggestion-item");
+      div.onclick = function() {
+        itemInput.value = i;
+        suggestionBox.innerHTML = "";
+        suggestionBox.style.display = "none";
+      };
+      suggestionBox.appendChild(div);
+    });
+    suggestionBox.style.display = filtered.length > 0 ? "block" : "none";
+  });
+}).getAllItems();
+
+      // get types for this header label
+      const headerObj = headerMeta.find(h => h.headerId === headerId);
+      const headerLabel = headerObj ? headerObj.label : "";
+      google.script.run.withSuccessHandler(function(typeOptions){
+        const typeSelect = document.createElement("select");
+        typeOptions.forEach(t => { const o = document.createElement("option"); o.value = o.textContent = t; typeSelect.appendChild(o); });
+        typeCell.appendChild(typeSelect);
+      }).getTypesByDescription(headerLabel);
+
+      // uom
+      const uomSelect = document.createElement("select");
+      ["Meter","KM"].forEach(u => { const opt = document.createElement("option"); opt.value = opt.textContent = u; uomSelect.appendChild(opt); });
+      uomCell.appendChild(uomSelect);
+
+      // qty, price, basic
+      const qtyInput = document.createElement("input"); qtyInput.type = "number"; qtyInput.min = 0; qtyInput.step = "any";
+      const priceInput = document.createElement("input"); priceInput.type = "number"; priceInput.min = 0; priceInput.step = "any";
+      const basicInput = document.createElement("input"); basicInput.type = "number"; basicInput.readOnly = true; basicInput.style.backgroundColor = "#f0f0f0";
+
+      qtyCell.appendChild(qtyInput);
+      priceCell.appendChild(priceInput);
+      basicCell.appendChild(basicInput);
+
+      // delete icon
+      const del = document.createElement("span"); del.className = "delete-icon"; del.textContent = "✖";
+      del.title = "Delete Item";
+      del.addEventListener("click", ()=> { row.remove(); updateTotals(); renumberItems(headerId); });
+      actionCell.appendChild(del);
+
+      function recalc(){
+        const q = parseFloat(qtyInput.value || 0);
+        const p = parseFloat(priceInput.value || 0);
+        basicInput.value = (q * p).toFixed(2);
+        updateTotals();
+      }
+      qtyInput.addEventListener("input", recalc);
+      priceInput.addEventListener("input", recalc);
+
+      updateTotals();
+    }
+
+    // ---------- totals ----------
+    function updateTotals(){
+      let totalQty = 0, totalUnit = 0, totalValue = 0;
+      const rows = Array.from(quotationTableBody.querySelectorAll("tr:not(.header-row)"));
+      rows.forEach(r => {
+        const qty = parseFloat(r.cells[4].querySelector("input")?.value || 0);
+        const unit = parseFloat(r.cells[5].querySelector("input")?.value || 0);
+        const value = parseFloat(r.cells[6].querySelector("input")?.value || 0);
+        totalQty += qty;
+        totalUnit += unit;
+        totalValue += value;
+      });
+      totalQtyEl.textContent = totalQty.toFixed(2);
+      totalUnitPriceEl.textContent = totalUnit.toFixed(2);
+      totalBasicValueEl.textContent = totalValue.toFixed(2);
+    }
+
+    // ---------- suggestions ----------
+    function setupStateSuggestions(){
+      stateInput.addEventListener("input", function(){
+        const q = stateInput.value.trim();
+        if (!q) { stateSuggestions.style.display = "none"; return; }
+        google.script.run.withSuccessHandler(function(states){
+          stateSuggestions.innerHTML = "";
+          states.forEach(s => {
+            const d = document.createElement("div"); d.textContent = s;
+            d.addEventListener("click", ()=> { stateInput.value = s; selectedState = s; stateSuggestions.style.display = "none"; });
+            stateSuggestions.appendChild(d);
+          });
+          stateSuggestions.style.display = states.length ? "block" : "none";
+        }).getStates(q);
+      });
+      document.addEventListener("click", function(e){ if (!stateSuggestions.contains(e.target) && e.target !== stateInput) stateSuggestions.style.display = "none"; });
+    }
+
+    function setupCitySuggestions(){
+      cityInput.addEventListener("input", function(){
+        const q = cityInput.value.trim();
+        if (!q || !selectedState) { citySuggestions.style.display = "none"; return; }
+        google.script.run.withSuccessHandler(function(cities){
+          citySuggestions.innerHTML = "";
+          cities.forEach(c => {
+            const d = document.createElement("div"); d.textContent = c;
+            d.addEventListener("click", ()=> { cityInput.value = c; citySuggestions.style.display = "none"; });
+            citySuggestions.appendChild(d);
+          });
+          citySuggestions.style.display = cities.length ? "block" : "none";
+        }).getCitiesByState(q, selectedState);
+      });
+      document.addEventListener("click", function(e){ if (!citySuggestions.contains(e.target) && e.target !== cityInput) citySuggestions.style.display = "none"; });
+    }
+
+    // ---------- server data loading ----------
+    function populateMasterDropdown(names){
+      if (!Array.isArray(names)) return;
+      salesExecutive.innerHTML = '<option value="">-- Select --</option>';
+      names.forEach(n => { const opt = document.createElement("option"); opt.value = n; opt.textContent = n; salesExecutive.appendChild(opt); });
+    }
+
+    function populateMasterDropdownWrapper(){
+      google.script.run.withSuccessHandler(populateMasterDropdown).getMasterNames();
+    }
+
+    function populatePartyDropdown(parties){
+      const list = document.getElementById("partyList");
+      list.innerHTML = "";
+      (parties||[]).forEach(p => { const o = document.createElement("option"); o.value = p; list.appendChild(o); });
+    }
+
+    function loadPartySuggestions(){
+      google.script.run.withSuccessHandler(populatePartyDropdown).getDistinctParties();
+    }
+
+    function loadHeaderDescriptions(){
+      google.script.run.withSuccessHandler(function(data){
+        headerDescriptions = Array.isArray(data) ? data : [];
+        headerDropdown.innerHTML = '<option value="">--Select Header--</option>';
+        headerDescriptions.forEach(d => { const o = document.createElement("option"); o.value = o.text = d; headerDropdown.appendChild(o); });
+      }).getHeaderDescriptions();
+    }
+
+    function populateMasterDropdown(){
+      google.script.run.withSuccessHandler(function(names){
+        names = names || [];
+        salesExecutive.innerHTML = '<option value="">-- Select --</option>';
+        names.forEach(n => { const o = document.createElement("option"); o.value = n; o.textContent = n; salesExecutive.appendChild(o); });
+      }).getMasterNames();
+    }
+
+    // ---------- misc server helpers ----------
+    function setAutoQuotationNumber(){
+     // const type = quotationTypeEl.value || "Purchase";
+      google.script.run.withSuccessHandler(function(autoNumber){
+        quotationNoInput.value = autoNumber || "";
+      }).generateQuotationNumber();
+    }
+
+    // ---------- form submit ----------
+    function collectFormData(){
+      const data = {
+        inqNo: hiddeninqNo.value || "",
+        quotationDate: document.getElementById("quotationDate").value,
+        quotationNo: quotationNoInput.value,
+        quotationType: quotationTypeEl.value,
+        cableType: document.getElementById("cableType").value,
+        companyName: document.getElementById("companyName").value,
+        address: document.getElementById("address").value,
+        state: stateInput.value,
+        city: cityInput.value,
+        contact: document.getElementById("contact").value,
+        email: document.getElementById("email").value,
+        salesExecutive: salesExecutive.value,
+        kname: document.getElementById("kname").value,
+        kmobile: document.getElementById("kmobile").value,
+        project: document.getElementById("project").value,
+        quotTitle: document.getElementById("quotTitle").value,
+        finalQuotationNumber:document.getElementById("finalQuotationNumber").value,
+        termsText: quotationTypeEl.value === "Purchase" ? inquiryTerms.innerHTML : tenderTerms.innerHTML,
+        headers: []
+      };
+
+      // iterate rows and build headers/items
+      const rows = Array.from(quotationTableBody.querySelectorAll("tr"));
+      let currentHeader = null;
+      rows.forEach(r => {
+        if (r.classList.contains("header-row")){
+          const label = (r.querySelector("td")?.textContent || "").trim();
+          currentHeader = { headerLabel: label, items: [] };
+          data.headers.push(currentHeader);
+        } else {
+          const cells = r.querySelectorAll("td");
+          if (cells.length < 8 || !currentHeader) return;
+          const item = cells[1].querySelector("input")?.value || "";
+          const type = cells[2].querySelector("select")?.value || "";
+          const uom = cells[3].querySelector("select")?.value || "";
+          const qty = parseFloat(cells[4].querySelector("input")?.value || 0);
+          const unitPrice = parseFloat(cells[5].querySelector("input")?.value || 0);
+          const basicValue = parseFloat(cells[6].querySelector("input")?.value || 0);
+          currentHeader.items.push({ item, type, uom, qty, unitPrice, basicValue });
+        }
+      });
+
+      return data;
+    }
+
+  function submitForm(status = "Draft", event) {
+     event.preventDefault(); 
+    if (status === "Final") {
+    const finalQuotation = document.getElementById("finalQuotationNumber").value; // get value from textbox
+    if (!finalQuotation || finalQuotation.trim() === "") {
+      alert("Please fill the Final Quotation Number!");
+      return; // stop submission
+    }
+  }
+      const mode = quotationEntry.value || "NEW";
+      const data = collectFormData();
+      data.status = status;
+      data.isEdit = isEditMode;
+
+      // UI feedback
+      const clickedBtn = event?.target;
+      if (clickedBtn) clickedBtn.disabled = true;
+      loadingEl.style.display = "inline-block";
+
+      google.script.run
+        .withSuccessHandler(function(msg){
+          loadingEl.style.display = "none";
+          if (clickedBtn) clickedBtn.disabled = false;
+          if (msg) window.open(msg, "_blank"); // expects returned PDF url
+          if (data.isEdit) { isEditMode = false; }
+          clearForm();
+          // Reset panels to NEW
+          quotationEntry.value = "NEW";
+          onModeChange();
+        })
+        .withFailureHandler(function(err){
+          loadingEl.style.display = "none";
+          if (clickedBtn) clickedBtn.disabled = false;
+          alert("Script failed: " + (err && err.message ? err.message : JSON.stringify(err)));
+        }).submitOrUpdateQuotation(data);
+    }
+
+    // ---------- load & fill ----------
+    function fillFormWithLoadedData(data){
+      if (!data) return;
+      // map top fields
+      const qTypeRaw = (data.quotationType || "").toString().toLowerCase();
+      const qTypeValue = qTypeRaw.includes("purchase") ? "Purchase" : (qTypeRaw.includes("tender") ? "Tender" : "Purchase");
+      quotationTypeEl.value = qTypeValue;
+      document.getElementById("quotationDate").value = data.quotationDate || "";
+      quotationNoInput.value = data.quotationNo || "";
+      document.getElementById("cableType").value = data.cableType || "";
+      document.getElementById("companyName").value = data.companyName || "";
+      document.getElementById("address").value = data.address || "";
+      stateInput.value = data.state || "";
+      cityInput.value = data.city || "";
+      document.getElementById("contact").value = data.contact || "";
+      document.getElementById("email").value = data.email || "";
+      salesExecutive.value = data.salesExecutive || "";
+      document.getElementById("project").value = data.project || "";
+      document.getElementById("kname").value = data.kname || "";
+      document.getElementById("kmobile").value = data.kmobile || "";
+      document.getElementById("quotTitle").value = data.quotTitle || "";
+      document.getElementById("finalQuotationNumber").value = data.finalQuotationNumber || "";
+      updateTermsVisibility();
+      const termsField = qTypeValue === "Purchase" ? inquiryTerms : tenderTerms;
+      if (termsField) termsField.innerHTML = data.termsText || termsField.innerHTML;
+
+      // clear and rebuild table
+      quotationTableBody.innerHTML = "";
+      headerMeta = [];
+
+      (data.headers || []).forEach((h, headerIndex) => {
+        const label = h.headerLabel || ("Header " + (headerIndex+1));
+        const headerId = "header_loaded_" + headerIndex + "_" + Date.now();
+        headerMeta.push({ headerId, label });
+
+        // header row
+        const headerRow = document.createElement("tr");
+        headerRow.className = "header-row";
+        headerRow.dataset.headerId = headerId;
+        headerRow.innerHTML = `
+          <td colspan="8">
+            <span style="font-size:14px;">${label}</span>
+            <div style="position:absolute; right:8px; top:6px;">
+              <span class="add-item" data-header="${headerId}" title="Add Item" style="cursor:pointer; font-size:18px; color:#007bff; margin-right:6px;">➕</span>
+              <span class="remove-header" title="Remove Header" style="cursor:pointer; font-size:18px; color:#dc3545;">✖</span>
+            </div>
+          </td>
+        `;
+        quotationTableBody.appendChild(headerRow);
+        headerRow.querySelector(".add-item").addEventListener("click", ()=> addItem(headerId));
+        headerRow.querySelector(".remove-header").addEventListener("click", (ev)=> removeHeader(ev.target));
+
+        // items
+        (h.items || []).forEach((item, itemIndex) => {
+          const row = document.createElement("tr");
+          row.dataset.headerId = headerId;
+          row.innerHTML = `<td>${itemIndex+1}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>`;
+          quotationTableBody.appendChild(row);
+
+          // populate item select and set selection if matches
+       const itemInput = document.createElement("input");
+itemInput.type = "text";
+itemInput.placeholder = "Type item name...";
+itemInput.value = item.item || "";   // pre-fill saved value
+row.cells[1].appendChild(itemInput);
+
+// suggestion box
+const suggestionBox = document.createElement("div");
+suggestionBox.classList.add("suggestion-box");
+row.cells[1].appendChild(suggestionBox);
+
+// fetch all items once and use for autocomplete
+google.script.run.withSuccessHandler(function(items) {
+  itemInput.addEventListener("input", function() {
+    const query = itemInput.value.toLowerCase();
+    suggestionBox.innerHTML = "";
+    if (!query) {
+      suggestionBox.style.display = "none";
+      return;
+    }
+    const filtered = items.filter(i => i.toLowerCase().includes(query));
+    filtered.forEach(i => {
+      const div = document.createElement("div");
+      div.textContent = i;
+      div.classList.add("suggestion-item");
+      div.onclick = function() {
+        itemInput.value = i;
+        suggestionBox.innerHTML = "";
+        suggestionBox.style.display = "none";
+      };
+      suggestionBox.appendChild(div);
+    });
+    suggestionBox.style.display = filtered.length > 0 ? "block" : "none";
+  });
+}).getAllItems();
+
+          // types
+          google.script.run.withSuccessHandler(function(typeOptions){
+            const typeSelect = document.createElement("select");
+            (typeOptions || []).forEach(t => { const o=document.createElement("option"); o.value=o.textContent=t; if (t === item.type) o.selected = true; typeSelect.appendChild(o); });
+            row.cells[2].appendChild(typeSelect);
+          }).getTypesByDescription(label);
+
+          // uom
+          const uomSelect = document.createElement("select");
+          ["Meter","KM"].forEach(u => { const o=document.createElement("option"); o.value=o.textContent=u; if (u === item.uom) o.selected = true; uomSelect.appendChild(o); });
+          row.cells[3].appendChild(uomSelect);
+
+          // qty
+          const qtyInput = document.createElement("input"); qtyInput.type="number"; qtyInput.value = item.qty || 0;
+          row.cells[4].appendChild(qtyInput);
+
+          // unit price
+          const priceInput = document.createElement("input"); priceInput.type="number"; priceInput.value = item.unitPrice || "";
+          row.cells[5].appendChild(priceInput);
+
+          // basic
+          const basicInput = document.createElement("input"); basicInput.type="number"; basicInput.readOnly = true; basicInput.style.backgroundColor="#f0f0f0"; basicInput.value = item.basicValue || ((parseFloat(item.qty||0)*parseFloat(item.unitPrice||0)).toFixed(2));
+          row.cells[6].appendChild(basicInput);
+
+          // delete
+          const del = document.createElement("span"); del.className="delete-icon"; del.textContent="✖";
+          del.addEventListener("click", ()=> { row.remove(); updateTotals(); renumberItems(headerId); });
+          row.cells[7].appendChild(del);
+
+          // recalc on change
+          [qtyInput, priceInput].forEach(inp => inp.addEventListener("input", ()=> {
+            const q = parseFloat(qtyInput.value||0);
+            const p = parseFloat(priceInput.value||0);
+            basicInput.value = (q * p).toFixed(2);
+            updateTotals();
+          }));
+        });
+      });
+
+      updateTotals();
+    }
+
+    // ---------- UI helpers ----------
+    function updateTermsVisibility(){
+      if (quotationTypeEl.value === "Purchase"){
+        inquiryTerms.style.display = "block";
+        tenderTerms.style.display = "none";
+      } else {
+        inquiryTerms.style.display = "none";
+        tenderTerms.style.display = "block";
+      }
+    }
+    function toggleTermsEditable(){
+      const isPurchase = quotationTypeEl.value === "Purchase";
+      const target = isPurchase ? inquiryTerms : tenderTerms;
+      const editable = target.getAttribute("contenteditable") === "true";
+      target.setAttribute("contenteditable", !editable);
+      editTermsBtn.style.color = editable ? "gray" : "#007bff";
+      if (!editable) target.focus();
+    }
+
+    function onQuotationTypeChange(){ setAutoQuotationNumber(); updateTermsVisibility(); }
+
+    function clearForm(){
+      // clear top fields (keep dropdown controls present)
+      const fields = ["companyName","address","stateInput","cityInput","contact","email","kname","kmobile","project","quotTitle"];
+      fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ""; });
+      salesExecutive.value = "";
+      // clear table body
+      quotationTableBody.innerHTML = "";
+      headerMeta = [];
+      // reset totals
+      totalQtyEl.textContent = "0";
+      totalUnitPriceEl.textContent = "0";
+      totalBasicValueEl.textContent = "0";
+      // reset date and quot title, number
+      document.getElementById("quotationDate").value = new Date().toISOString().split("T")[0];
+      document.getElementById("quotTitle").value = "Your Purchase Tender Enquiry of LT Power & Control Cables for Project";
+      setAutoQuotationNumber();
+    }
+
+    // ---------- delete ----------
+    function deleteQuotation(){
+      const qNo = quotationNoInput.value.trim();
+      if (!qNo) { alert("Quotation Number is missing. Cannot delete."); return; }
+      if (!confirm("Are you sure you want to delete Quotation No: " + qNo + "?")) return;
+      google.script.run.withSuccessHandler(function(msg){
+        alert(msg || "Deleted");
+        clearForm();
+      }).deleteQuotationFromSheet(qNo);
+    }
+
+    // ---------- start ----------
+    init();
+
+    // expose some functions to global scope only if needed by inline handlers (kept minimal)
+    window.addItem = addItem;
+    window.addHeader = function(){ onAddHeaderClick(); };
+    window.removeHeader = removeHeader;
+    window.fillFormWithLoadedData = fillFormWithLoadedData;
+
+  })();
+  </script>
+</script>
+</body>
+</html>
